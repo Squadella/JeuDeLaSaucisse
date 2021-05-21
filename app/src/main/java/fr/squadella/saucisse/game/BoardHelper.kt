@@ -42,6 +42,4 @@ object BoardHelper {
         }
         return line
     }
-
-
 }

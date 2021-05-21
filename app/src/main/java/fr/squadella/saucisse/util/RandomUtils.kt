@@ -2,6 +2,7 @@ package fr.squadella.saucisse.util
 
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -9,6 +10,6 @@ import kotlin.random.Random
  */
 object RandomUtils {
 
-    val random = Random(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+    val random = Random(Date().time)
 
 }
