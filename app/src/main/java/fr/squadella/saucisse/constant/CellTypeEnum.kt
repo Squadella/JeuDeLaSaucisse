@@ -8,5 +8,6 @@ enum class CellTypeEnum {
     SAUCE,
     SAUCISSE,
     DINER,
-    PATATE
+    PATATE,
+    EXPLOSION
 }

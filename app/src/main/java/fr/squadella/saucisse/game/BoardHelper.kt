@@ -2,6 +2,7 @@ package fr.squadella.saucisse.game
 
 import fr.squadella.saucisse.constant.CellTypeEnum
 import fr.squadella.saucisse.util.RandomUtils
+import kotlinx.coroutines.flow.asFlow
 import kotlin.random.nextInt
 import kotlin.random.nextUInt
 
@@ -21,6 +22,24 @@ object BoardHelper {
         // On parcours toutes les lignes
         for (i in 0..height) {
             board.add(initBoardLine(width))
+        }
+        return board
+    }
+
+    /**
+     * Permet d'initialiser un tableau de jeu qui est vide.
+     *
+     * @param height la hauteur du tableau.
+     * @param width la largeur du tableau.
+     */
+    fun initEmptyBoard(height: Int, width: Int): ArrayList<ArrayList<CellTypeEnum>> {
+        val board = ArrayList<ArrayList<CellTypeEnum>>()
+        for (i in 0..height) {
+            val line = ArrayList<CellTypeEnum>()
+            for (j in 0..width) {
+                line.add(CellTypeEnum.VIDE)
+            }
+            board.add(line)
         }
         return board
     }

@@ -2,18 +2,14 @@ package fr.squadella.saucisse.game
 
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import fr.squadella.saucisse.R
 import fr.squadella.saucisse.constant.CellTypeEnum
 import fr.squadella.saucisse.databinding.FragmentGameBinding
 import fr.squadella.saucisse.util.RandomUtils
@@ -78,14 +74,7 @@ class GameFragment : Fragment() {
         // Mise à jour des éléments du tableau de jeu.
         sprites.forEachIndexed { i, lines ->
             lines.forEachIndexed { j, sprite ->
-                val newResource = getImageResourceByType(board[i][j])
-                if (newResource != sprite.tag as Int) {
-                    val oldRotation = sprite.rotation
-                    sprite.setImageResource(newResource)
-                    sprite.tag = newResource
-                    sprite.rotation = oldRotation
-                    setAnimation(sprite)
-                }
+                SpriteHelper.updateSprite(sprite, board[i][j], requireContext())
             }
         }
     }
@@ -106,7 +95,7 @@ class GameFragment : Fragment() {
             sprites.add(boardLine)
             val linearLayout = createLineLayout()
             for (column in line) {
-                val imageView = initElement(column)
+                val imageView = SpriteHelper.initSprite(column, requireContext())
                 boardLine.add(imageView)
                 linearLayout.addView(imageView)
             }
@@ -115,50 +104,7 @@ class GameFragment : Fragment() {
 
     }
 
-    /**
-     * Création d'un élément graphique.
-     *
-     * @param type le type d'élément qui doit être affiché.
-     */
-    private fun initElement(type: CellTypeEnum): ImageView {
-        val imageView = ImageView(context)
 
-        imageView.setImageResource(getImageResourceByType(type))
-        imageView.tag = getImageResourceByType(type)
-
-        imageView.rotation = RandomUtils.random.nextInt(0, 12) * 30f
-
-        imageView.layoutParams = ViewGroup.LayoutParams(49, 49)
-
-        if (type != CellTypeEnum.VIDE) {
-            setAnimation(imageView)
-        }
-
-        imageView.setPadding(1)
-
-        return imageView
-    }
-
-    /**
-     * Permet de récupérer le type d'image en fonction du type d'élément
-     */
-    private fun getImageResourceByType(type: CellTypeEnum): Int {
-        return when(type) {
-            CellTypeEnum.SAUCE -> R.drawable.ic_ketchup
-            CellTypeEnum.SAUCISSE -> R.drawable.saucisse
-            CellTypeEnum.DINER -> R.drawable.diner
-            CellTypeEnum.PATATE -> R.drawable.patate
-            CellTypeEnum.VIDE -> R.drawable.vide
-        }
-    }
-
-    private fun setAnimation(imageView: ImageView) {
-            val rotation: Animation =
-                AnimationUtils.loadAnimation(context, R.anim.clockwise_rotation)
-            rotation.repeatCount = Animation.INFINITE
-            imageView.startAnimation(rotation)
-        
-    }
 
     /**
      * Permet d'initialiser le layout pour afficher une ligne.
