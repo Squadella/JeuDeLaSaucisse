@@ -9,7 +9,7 @@
         android:id="@+id/mainMenuFragment"
         android:name="fr.squadella.saucisse.MainMenuFragment"
         android:label="fragment_main_menu"
-        tools:layout="@layout/fragment_main_menu" >
+        tools:layout="@layout/fragment_main_menu">
         <action
             android:id="@+id/action_mainMenuFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
@@ -18,7 +18,7 @@
         android:id="@+id/gameFragment"
         android:name="fr.squadella.saucisse.game.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" >
+        tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_gameFragment_to_mainMenuFragment"
             app:destination="@id/mainMenuFragment"

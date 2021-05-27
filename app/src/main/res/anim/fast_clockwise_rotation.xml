@@ -7,7 +7,7 @@
         android:interpolator="@android:anim/linear_interpolator"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:startOffset="0"
         android:repeatCount="infinite"
+        android:startOffset="0"
         android:toDegrees="3600" />
 </set>

@@ -1,18 +1,18 @@
 package fr.squadella.saucisse.game
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import fr.squadella.saucisse.constant.CellTypeEnum
 import fr.squadella.saucisse.databinding.FragmentGameBinding
-import fr.squadella.saucisse.util.RandomUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +29,8 @@ class GameFragment : Fragment() {
     private val sprites = ArrayList<ArrayList<ImageView>>()
 
     private val viewModel: GameViewModel by viewModels()
+
+    private var init = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +59,29 @@ class GameFragment : Fragment() {
             viewModel.calculateNextState()
         }
 
+        viewModel.interruptUi.observe(viewLifecycleOwner) {
+            if (init) {
+                handleScreenInterruption()
+            }
+            init = true
+        }
+
         // Initialisation des images pour le jeu
         return binding.root
     }
+
+    /**
+     * Permet de gérer la pause sur les input UI.
+     */
+    private fun handleScreenInterruption() {
+        val delay = 500L
+        binding.gameContainer.isClickable = false
+        Handler(Looper.getMainLooper()).postDelayed(
+            { binding.gameContainer.isClickable = true },
+            delay
+        )
+    }
+
 
     /**
      * Permet de rafraichir le tableau avec les données provenant du view model.
@@ -103,7 +125,6 @@ class GameFragment : Fragment() {
         }
 
     }
-
 
 
     /**

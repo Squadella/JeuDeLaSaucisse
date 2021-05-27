@@ -10,4 +10,6 @@ object RandomUtils {
 
     val random = Random(Date().time)
 
+    val randomJava = java.util.Random()
+
 }

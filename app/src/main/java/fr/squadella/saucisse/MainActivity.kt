@@ -1,7 +1,7 @@
 package fr.squadella.saucisse
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Contient les informations sur l'activité principale de l'application.

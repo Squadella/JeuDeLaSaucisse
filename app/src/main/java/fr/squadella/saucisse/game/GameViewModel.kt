@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import fr.squadella.saucisse.constant.CellTypeEnum
-import fr.squadella.saucisse.util.RandomUtils
 import kotlin.math.floor
 import kotlin.properties.Delegates
 
@@ -14,8 +13,10 @@ import kotlin.properties.Delegates
 class GameViewModel : ViewModel() {
 
     /** La liste des informations contenu sur le tableau de jeu. */
-    val board: MutableLiveData<List<List<CellTypeEnum>>> =
-        MutableLiveData<List<List<CellTypeEnum>>>()
+    val board: MutableLiveData<List<ArrayList<CellTypeEnum>>> =
+        MutableLiveData<List<ArrayList<CellTypeEnum>>>()
+
+    val interruptUi = MutableLiveData(false)
 
     private var height by Delegates.notNull<Int>()
     private var width by Delegates.notNull<Int>()
@@ -23,8 +24,8 @@ class GameViewModel : ViewModel() {
     /**
      * Permet d'initialiser le plateau de jeu.
      *
-     * @param pixelHeight la hauteur en pixel de l'écran
-     * @param pixelWidth la largeur en pixel de l'écran
+     * @param pixelHeight la hauteur en pixel de l'écran.
+     * @param pixelWidth la largeur en pixel de l'écran.
      */
     fun initBoard(pixelHeight: Int, pixelWidth: Int) {
         Log.e("VM", "Board init")
@@ -41,6 +42,7 @@ class GameViewModel : ViewModel() {
     fun calculateNextState() {
         val newBoard = BoardHelper.initEmptyBoard(height, width)
         val helper = BoardElementHelper(board.value!!)
+        val patateHelper = PatateHelper(width, height, board.value!!)
         // Vérification de chaque cellule.
         for (i in 0..height) {
             for (j in 0..width) {
@@ -54,9 +56,11 @@ class GameViewModel : ViewModel() {
                     CellTypeEnum.SAUCE -> handleNextStateSauceCell(info)
                     CellTypeEnum.SAUCISSE -> handleNexStateSaucisseCell(info)
                     CellTypeEnum.DINER -> handleNextStateDinerCell(info)
-                    CellTypeEnum.PATATE -> explodePatate(i, j, newBoard)
+                    CellTypeEnum.PATATE -> patateHelper.explodePatate(i, j, newBoard)
                     CellTypeEnum.EXPLOSION -> CellTypeEnum.VIDE
-                    else -> CellTypeEnum.PATATE
+                }
+                if (newState == CellTypeEnum.EXPLOSION) {
+                    interruptUi.postValue(true)
                 }
                 // Ajout du nouveau élément dans le tableau
                 newBoard[i][j] = newState
@@ -132,41 +136,6 @@ class GameViewModel : ViewModel() {
         }
         // Dans les autres cas, le diner survit
         return CellTypeEnum.DINER
-    }
-
-    /**
-     * Permet de faire exploser une patate bleue.
-     */
-    private fun explodePatate(
-        currentLine: Int,
-        currentColumn: Int,
-        newBoard: ArrayList<ArrayList<CellTypeEnum>>
-    ): CellTypeEnum {
-        // Récupération de la taille de l'explosion
-        val radius = RandomUtils.random.nextInt(4, 7)
-        // Parcours des cases pour placer des explosions
-        for (i in 0..radius) {
-            for (j in 0..radius) {
-                // Si on ne dépasse pas du tableau
-                if (currentLine - i >= 0) {
-                    if (currentColumn - j >= 0) {
-                        newBoard[currentLine - i][currentColumn - j] = CellTypeEnum.EXPLOSION
-                    }
-                    if (currentColumn + j <= width) {
-                        newBoard[currentLine - i][currentColumn + j] = CellTypeEnum.EXPLOSION
-                    }
-                }
-                if (currentLine + i <= height) {
-                    if (currentColumn - j >= 0) {
-                        newBoard[currentLine + i][currentColumn - j] = CellTypeEnum.EXPLOSION
-                    }
-                    if (currentColumn + j <= width) {
-                        newBoard[currentLine + i][currentColumn + j] = CellTypeEnum.EXPLOSION
-                    }
-                }
-            }
-        }
-        return CellTypeEnum.EXPLOSION
     }
 
     /**

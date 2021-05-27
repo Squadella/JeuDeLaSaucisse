@@ -4,4 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="main_menu_title">Le jeu de la saucisse</string>
     <string name="lancer_le_jeu">Lancer le jeu</string>
+    <!-- Preference Titles -->
+    <string name="game_option_header">Jeu</string>
+
 </resources>
