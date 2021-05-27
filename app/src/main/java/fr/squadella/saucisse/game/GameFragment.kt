@@ -1,5 +1,6 @@
 package fr.squadella.saucisse.game
 
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -108,7 +109,6 @@ class GameFragment : Fragment() {
     private fun initBoard(board: List<List<CellTypeEnum>>) {
         // Si le tableau est vide, on ne fait rien.
         if (board.isEmpty()) {
-            print("En fait non")
             return
         }
         // Création des éléments graphiques
@@ -117,6 +117,7 @@ class GameFragment : Fragment() {
             sprites.add(boardLine)
             val linearLayout = createLineLayout()
             for (column in line) {
+                
                 val imageView = SpriteHelper.initSprite(column, requireContext())
                 boardLine.add(imageView)
                 linearLayout.addView(imageView)
