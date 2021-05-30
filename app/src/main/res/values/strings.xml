@@ -6,5 +6,6 @@
     <string name="lancer_le_jeu">Lancer le jeu</string>
     <!-- Preference Titles -->
     <string name="game_option_header">Jeu</string>
+    <string name="auto_play">Auto-play</string>
 
 </resources>
